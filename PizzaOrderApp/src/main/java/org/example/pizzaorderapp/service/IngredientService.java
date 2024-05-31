@@ -4,6 +4,7 @@ import org.example.pizzaorderapp.model.Ingredient;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IngredientService {
@@ -21,4 +22,16 @@ public class IngredientService {
     public List<Ingredient> getAllIngredients() {
         return ingredients;
     }
+
+    public Optional<Ingredient> findById(long id) {
+        return ingredients.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst();
+    }
+
+    public boolean delete(long id) {
+        return ingredients.removeIf(ingredient -> ingredient.getId() == id);
+
+    }
+
 }
