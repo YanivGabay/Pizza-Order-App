@@ -1,4 +1,4 @@
 package org.example.pizzaorderapp.controller;
 
-public class OrderController {
+public class OrderController extends BaseController{
 }
