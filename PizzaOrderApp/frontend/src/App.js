@@ -7,28 +7,18 @@ import {
 } from "react-router-dom";
 import Button from '@mui/material/Button';
 import NotFound from "./components/NotFound";
+import Header from "./components/Header";
+import Home from "./components/Home";
 export default function App() {
   return (
       <Router>
-          <Home>
+            <Header>
               <Routes>
-
-
+                  <Route path="/" element={<Home/>}/>
                   <Route path="*" element={<NotFound />} />  {/* Catch-all for any undefined routes */}
               </Routes>
-          </Home>
+            </Header>
+
       </Router>
   );
-}
-
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
 }
