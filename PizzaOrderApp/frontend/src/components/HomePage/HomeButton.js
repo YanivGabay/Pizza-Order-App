@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const HomeButton = (text , to) => {
+const HomeButton = ({text , to}) => {
 
     const navigate = useNavigate();
 
     const handleClick = () => {
-      navigate(to);
+      console.log('Clicked:', text);
+      console.log("Navigating to:", to);
+      navigate(to);  // Use the 'to' prop to navigate
     };
 
   return (
@@ -25,7 +27,7 @@ const HomeButton = (text , to) => {
         fontSize: '1rem' // Adjust font size as needed
       }}
     >
-      {text.text}
+      {text}
     </Button>
   )
 }

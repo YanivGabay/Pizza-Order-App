@@ -13,20 +13,24 @@ import HomeButton from './HomeButton';
 
  * @returns {JSX.Element} The rendered Home component.
  */
-
+ //this.id = id;
+ //this.firstName = firstName;
+// this.lastName = lastName;
+ // this.address = address;
+//  this.phoneNumber = phoneNumber;
 function Home({}) {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
 
         <WelcomeHead />
-        
+       
         <Stack direction="row" spacing={2} justifyContent="center">
             <Box>
-                { <HomeButton text="Order Pizza" to="/order" /> }
+                { <HomeButton text="Order Pizza" to="/order/new" /> }
             </Box>
             <Box>
-                { <HomeButton text="View Orders" to="/orders" /> }
+                { <HomeButton text="View Orders" to="/order/:orderId" /> }
             </Box>
         </Stack>
         </Box>

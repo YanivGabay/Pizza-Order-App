@@ -5,14 +5,16 @@ import {
   Route,
 
 } from "react-router-dom";
-import Button from '@mui/material/Button';
 import NotFound from "./components/NotFound";
 import Header from "./components/Header";
 import Home from "./components/HomePage/Home";
-
-
-
+import OrderFormPage from "./components/OrderFormPage/OrderFormPage";
+import PizzaFormPage from "./components/PizzaFormPage/PizzaFormPage";
+import OrderView from "./components/OrderView/OrderView";
+import { OrderProvider } from "./context/OrderContext";
+import OrderDetails from "./components/OrderView/OrderDetails";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,16 +33,28 @@ const theme = createTheme({
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-            <Header>
-              <Routes>
-                  <Route path="/" element={<Home/>}/>
-                  <Route path="*" element={<NotFound />} />  {/* Catch-all for any undefined routes */}
-              </Routes>
-            </Header>
+    //some context providers should exists
+    //in the future. to acess the cart more easily
+    //the cart should have it own context?
+    //<CartProvider>
 
-      </Router>
+    <ThemeProvider theme={theme}>
+      <OrderProvider>
+      <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/order/new" element={<OrderFormPage />} />
+              
+        <Route path="/order/:orderId" element={<OrderView />}>
+          <Route path="/order/:orderId/pizza" element={<PizzaFormPage />} />
+          <Route index element={<OrderDetails />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+    </OrderProvider>
       </ThemeProvider>
   );
 }
