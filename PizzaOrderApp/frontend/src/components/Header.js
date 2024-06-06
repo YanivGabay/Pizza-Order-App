@@ -15,6 +15,7 @@ function cartCount() {
 }
 
 
+
 function Header({children}) {
     const navigate = useNavigate();
     const goHome = () => {

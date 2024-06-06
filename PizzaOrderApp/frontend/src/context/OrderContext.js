@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 
 const OrderContext = createContext();
 
+
 export const OrderProvider = ({ children }) => {
     const [currentOrder, setCurrentOrder] = useState(null);
     const [cart, setCart] = useState([]);
