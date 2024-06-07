@@ -19,6 +19,23 @@ const OrderFormPage = () => {
         required: true
     };
 
+    function initializeFieldValue(fieldType) {
+        switch (fieldType) {
+            case 'number':
+                return 0;
+            case 'text':
+                return '';
+            case 'date':
+                return '';  // Default date or an empty string if date picker handles it
+            case 'checkbox':
+                return false;  // Typically used for boolean values
+            case 'gender':
+                return '';  // Could be 'Male', 'Female', 'Other', or an empty string
+            default:
+                return '';
+        }
+    }
+
     useEffect(() => {
         fetch('/api/v1/form-structure')
             .then(response => response.json())
@@ -26,7 +43,7 @@ const OrderFormPage = () => {
                 setFormFields(data);
                 let initialData = {};
                 data.forEach(field => {
-                    initialData[field.fieldName] = field.fieldType === 'number' ? 0 : '';
+                    initialData[field.fieldName] = initializeFieldValue(field.fieldType);
                 });
                 setFormData(initialData);
             })

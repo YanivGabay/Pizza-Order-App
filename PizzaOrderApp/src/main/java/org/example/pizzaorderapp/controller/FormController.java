@@ -8,12 +8,14 @@ import org.example.pizzaorderapp.service.FormField;     // Ensure this is correc
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 import java.util.List;  // Import for using List
 
 
 
 @RestController
-public class FormController {
+public class FormController extends BaseController {
 
     private final FormService formService;
 

@@ -1,10 +1,13 @@
 package org.example.pizzaorderapp.service;
 
 import org.example.pizzaorderapp.model.Order;
+import org.springframework.stereotype.Service;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service
 public class OrderService {
 
     private final Map<String, Order> orders = new ConcurrentHashMap<>();
