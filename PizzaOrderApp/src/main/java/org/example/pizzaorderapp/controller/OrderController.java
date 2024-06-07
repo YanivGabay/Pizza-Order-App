@@ -1,5 +1,6 @@
 package org.example.pizzaorderapp.controller;
 
+import jakarta.validation.Valid;
 import org.example.pizzaorderapp.model.Order;
 import org.example.pizzaorderapp.service.OrderService;
 import org.springframework.http.ResponseEntity;

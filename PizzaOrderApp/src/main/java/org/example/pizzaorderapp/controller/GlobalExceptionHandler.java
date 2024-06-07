@@ -1,5 +1,6 @@
 package org.example.pizzaorderapp.controller;
 
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,10 @@ import java.util.Map;
 
 
 @ControllerAdvice
-public class ExceptionHandler  {
+public class GlobalExceptionHandler  {
 
-  
- @ExceptionHandler(MethodArgumentNotValidException.class)
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {

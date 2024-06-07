@@ -1,5 +1,8 @@
 package org.example.pizzaorderapp.model;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class Order {

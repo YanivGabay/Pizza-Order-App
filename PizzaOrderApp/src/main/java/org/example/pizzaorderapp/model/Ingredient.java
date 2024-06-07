@@ -1,5 +1,7 @@
 package org.example.pizzaorderapp.model;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
+
+
 
 public class Ingredient {
     private Long id;
