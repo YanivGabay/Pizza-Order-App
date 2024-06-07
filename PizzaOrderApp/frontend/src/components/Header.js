@@ -5,14 +5,12 @@ import Box from '@mui/material/Box';
 
 import { AppBar, Toolbar, Typography, Button, IconButton, Badge } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
+import { useOrder } from '../context/OrderContext';
 
 function onCartClick() {
     console.log('Cart clicked');
 }
-function cartCount() {
-    return 5;
-}
+
 
 
 
@@ -21,6 +19,9 @@ function Header({children}) {
     const goHome = () => {
         navigate('/');  // Navigate back to the home page
     };
+    const { cart } = useOrder();
+    const cartCount = cart.length;
+    
     return (
         <Box>
         <AppBar position="static">
@@ -31,7 +32,7 @@ function Header({children}) {
                 </Typography>
               
                 <IconButton color="primaryLight" onClick={onCartClick}>
-                    <Badge badgeContent={5} color="secondary">
+                    <Badge badgeContent={cartCount} color="secondary">
                         <ShoppingCartIcon />
                     </Badge>
                 </IconButton>

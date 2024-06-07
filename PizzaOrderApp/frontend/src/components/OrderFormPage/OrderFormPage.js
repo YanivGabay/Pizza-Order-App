@@ -116,8 +116,44 @@ const OrderFormPage = () => {
 
         console.log(formData); // Proceed with form submission
         // Send formData to backend
+        sendFormData()
+          
     };
 
+    const sendFormData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                navigate('/next-step', { state: { orderDetails: result } });
+            } else {
+                if (result.errors) {
+                    setErrors(result.errors);
+                } else {
+                    alert('An error occurred. Please try again later.');
+                }
+            }
+        } catch (error) {
+            console.error('Failed to submit form:', error);
+            alert('An error occurred. Please try again later.');
+        }
+        setLoading(false);
+    };
+    
+
+    const handleReset = () => {
+        // Reset form data and errors
+        setFormData(Object.keys(formData).reduce((acc, key) => {
+            acc[key] = initializeFieldValue(formFields.find(field => field.fieldName === key).fieldType);
+            return acc;
+        }, {}));
+        setErrors({});
+    }
 
     return (
         <Box>
@@ -155,7 +191,7 @@ const OrderFormPage = () => {
                                         ))}
                                         <Grid item xs={12} display="flex" justifyContent="center">
                                             <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, m:2 }}>Submit</Button>
-                                            <Button type="reset" variant="contained" sx={{ mt: 3, mb: 2, m:2 }}>Reset</Button>
+                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m:2 }}>Reset</Button>
                                         </Grid>
                                        
                                     </form>
