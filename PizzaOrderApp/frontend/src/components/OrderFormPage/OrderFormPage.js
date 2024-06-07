@@ -12,33 +12,40 @@ const OrderFormPage = () => {
     const [formFields, setFormFields] = useState([]); 
     const [formData, setFormData] = useState({});
 
+// A simple representation to mimic backend structure
+    const exampleFormField = {
+        fieldName: 'exampleName',
+        fieldType: 'text',
+        required: true
+    };
 
     useEffect(() => {
-        fetch('/api/form-structure')
+        fetch('/api/v1/form-structure')
             .then(response => response.json())
             .then(data => {
                 setFormFields(data);
-                // Initialize formData state with fields from the backend, defaulting values to empty.
                 let initialData = {};
                 data.forEach(field => {
-                    initialData[field.fieldName] = '';
+                    initialData[field.fieldName] = field.fieldType === 'number' ? 0 : '';
                 });
                 setFormData(initialData);
             })
             .catch(error => console.error('Failed to fetch form structure:', error));
     }, []);
 
+
     const handleChange = (event) => {
-        const { name, value } = event.target;
+        const { name, value, type } = event.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === 'number' ? Number(value) : value
         }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Form submission logic
+        console.log(formData); // Process submission here
+        // Send formData to backend
     };
 
   return (
@@ -56,9 +63,9 @@ const OrderFormPage = () => {
                     fullWidth
                 />
             ))}
-          
+         <Button type="submit" variant="contained">Submit</Button>
         </form>
-        <Button type="submit" variant="contained">Submit</Button>
+
     </Box>
   )
 }

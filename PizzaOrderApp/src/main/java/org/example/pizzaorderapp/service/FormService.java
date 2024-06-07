@@ -14,7 +14,9 @@ public class FormService {
         fields.add(new FormField("firstName", "text", true));
         fields.add(new FormField("lastName", "text", true));
         fields.add(new FormField("address", "text", true));
-        fields.add(new FormField("phoneNumber", "text", true));
+        fields.add(new FormField("phoneNumber", "phoneNumber", true));
+
+
         return fields;
     }
 }

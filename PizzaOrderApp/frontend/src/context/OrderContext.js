@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, {createContext, useState, useContext, useEffect} from 'react';
 
 const OrderContext = createContext();
 
@@ -6,12 +6,8 @@ const OrderContext = createContext();
 export const OrderProvider = ({ children }) => {
     const [currentOrder, setCurrentOrder] = useState(null);
     const [cart, setCart] = useState([]);
-    const [userDetails, setUserDetails] = useState({
-        firstName: '',
-        lastName: '',
-        address: '',
-        phoneNumber: ''
-    });
+    const [userDetails, setUserDetails] = useState({});
+
 
     const addToCart = (pizza) => {
         setCart([...cart, pizza]);
@@ -30,6 +26,9 @@ export const OrderProvider = ({ children }) => {
     };
 
     const clearOrder = () => {
+        //will get from server
+        //the full details for the cookies
+        //or something
         setCurrentOrder(null);
         setCart([]);
         setUserDetails({

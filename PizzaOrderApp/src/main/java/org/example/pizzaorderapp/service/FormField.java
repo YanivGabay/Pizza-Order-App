@@ -1,9 +1,9 @@
 package org.example.pizzaorderapp.service;
 
 public class FormField {
-    private String fieldName;
-    private String fieldType;
-    private boolean required;
+    private final String fieldName;
+    private final String fieldType;
+    private final boolean required;
 
     public FormField(String fieldName, String fieldType, boolean required) {
         this.fieldName = fieldName;
@@ -11,5 +11,13 @@ public class FormField {
         this.required = required;
     }
 
-    
+    public String getFieldName() {
+        return fieldName;
+    }
+    public String getFieldType() {
+        return fieldType;
+    }
+    public boolean isRequired() {
+        return required;
+    }
 }
