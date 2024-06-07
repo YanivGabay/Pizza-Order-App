@@ -4,6 +4,10 @@ import java.util.List;
 
 public class Pizza {
     private Long id;
+
+
+    @NotNull(message = "Ingredients cannot be null or empty")
+    @Valid
     private List<Ingredient> ingredients;
 
     public Pizza(Long id, List<Ingredient> ingredients) {

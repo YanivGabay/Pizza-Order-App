@@ -1,8 +1,12 @@
 package org.example.pizzaorderapp.model;
+import javax.validation.constraints.NotBlank;
 
 public class Ingredient {
     private Long id;
+
+    @NotBlank(message = "Ingredient name cannot be empty")
     private String name;
+    
     private String imagePath;
 
     public Ingredient(Long id, String name, String imagePath) {

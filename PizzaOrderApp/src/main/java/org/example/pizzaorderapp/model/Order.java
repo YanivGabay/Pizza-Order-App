@@ -4,8 +4,16 @@ import java.util.List;
 
 public class Order {
     private Long id;
+
+
+   @Valid
     private List<Pizza> pizzas;
+
+    @Valid
+    @NotNull(message = "Customer info cannot be null")
     private CustomerInfo customerInfo;
+
+    
     private String orderCode;
 
     public Order(Long id, List<Pizza> pizzas, CustomerInfo customerInfo, String orderCode) {

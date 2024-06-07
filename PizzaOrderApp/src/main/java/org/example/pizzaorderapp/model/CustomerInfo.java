@@ -1,11 +1,27 @@
 package org.example.pizzaorderapp.model;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class CustomerInfo {
     private Long id;
+
+
+    @NotBlank(message = "First name cannot be empty")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
     private String firstName;
+
+    @NotBlank(message = "Last name cannot be empty")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
+
+    @NotBlank(message = "Address cannot be empty")
     private String address;
+
+    @NotBlank(message = "Phone number cannot be empty")
+    @Pattern(regexp = "[0-9]{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
+
 
     public CustomerInfo(Long id, String firstName, String lastName, String address, String phoneNumber) {
         this.id = id;

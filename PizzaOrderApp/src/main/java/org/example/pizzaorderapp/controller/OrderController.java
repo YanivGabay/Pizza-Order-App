@@ -17,7 +17,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
         Order createdOrder = orderService.createOrder(order);
         if (createdOrder != null) {
             return ResponseEntity.created(URI.create("/api/v1/orders/" + createdOrder.getId())).body(createdOrder);

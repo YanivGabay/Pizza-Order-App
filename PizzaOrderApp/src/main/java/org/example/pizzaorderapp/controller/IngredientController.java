@@ -29,22 +29,6 @@ public class IngredientController extends BaseController {
         Optional<Ingredient> ingredient = ingredientService.findById(id);
         return ingredient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-/*
-    @PostMapping("/ingredients")
-    public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient createdIngredient = ingredientService.save(ingredient);
-        return ResponseEntity.created(URI.create("/api/v1/ingredients/" + createdIngredient.getId())).body(createdIngredient);
-    }
 
-    @PutMapping("/ingredients/{id}")
-    public ResponseEntity<Ingredient> updateIngredient(@PathVariable Long id, @RequestBody Ingredient ingredientDetails) {
-        Optional<Ingredient> updatedIngredient = ingredientService.update(id, ingredientDetails);
-        return updatedIngredient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-*/
-    @DeleteMapping("/ingredients/{id}")
-    public ResponseEntity<Void> deleteIngredient(@PathVariable Long id) {
-        boolean isDeleted = ingredientService.delete(id);
-        return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-    }
+   
 }
