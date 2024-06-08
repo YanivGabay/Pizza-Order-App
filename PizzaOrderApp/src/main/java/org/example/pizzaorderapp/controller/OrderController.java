@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-
+import org.example.pizzaorderapp.model.CustomerInfo;
 @RestController
 public class OrderController extends BaseController {
 
@@ -18,8 +18,8 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody CustomerInfo customerInfo) {
+        Order createdOrder = orderService.createOrder(customerInfo);
         if (createdOrder != null) {
             return ResponseEntity.created(URI.create("/api/v1/orders/" + createdOrder.getId())).body(createdOrder);
         } else {

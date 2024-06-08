@@ -2,7 +2,7 @@ package org.example.pizzaorderapp.service;
 
 import org.example.pizzaorderapp.model.Order;
 import org.springframework.stereotype.Service;
-
+import org.example.pizzaorderapp.model.CustomerInfo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,10 +14,11 @@ public class OrderService {
     private final AtomicLong orderCounter = new AtomicLong();
 
     // Create a new order
-    public Order createOrder(Order order) {
+    public Order createOrder(CustomerInfo customerInfo) {
         // Generate a unique order code
+        System.out.println("Received customerInfo: " + customerInfo);
         String orderCode = "ORD" + orderCounter.incrementAndGet();
-        order.setOrderCode(orderCode);
+        Order order = new Order(customerInfo, orderCode,orderCounter.longValue());
         // Store the order in the map
         orders.put(orderCode, order);
         return order;

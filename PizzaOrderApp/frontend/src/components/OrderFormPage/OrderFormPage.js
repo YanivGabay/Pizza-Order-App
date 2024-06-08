@@ -123,14 +123,15 @@ const OrderFormPage = () => {
     const sendFormData = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/orders', {
+            console.log(formData);
+            const response = await fetch('/api/v1/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
             const result = await response.json();
             if (response.ok) {
-                navigate('/next-step', { state: { orderDetails: result } });
+                navigate(`api/v1/order/${result.id}/pizza`, { state: { orderDetails: result } });
             } else {
                 if (result.errors) {
                     setErrors(result.errors);

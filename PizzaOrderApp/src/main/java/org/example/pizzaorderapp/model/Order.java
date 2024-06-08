@@ -19,6 +19,12 @@ public class Order {
     
     private String orderCode;
 
+    public Order(CustomerInfo customerInfo, String orderCode,Long id) {
+        this.id = id;
+        this.customerInfo = customerInfo;
+        this.orderCode = orderCode;
+
+    }
     public Order(Long id, List<Pizza> pizzas, CustomerInfo customerInfo, String orderCode) {
         this.id = id;
         this.pizzas = pizzas;
