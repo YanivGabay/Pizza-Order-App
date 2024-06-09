@@ -11,12 +11,12 @@ public class IngredientService {
     private final List<Ingredient> ingredients = new ArrayList<>();
 
     public IngredientService() {
-        ingredients.add(new Ingredient(1L, "Tomato", "images/tomato.png"));
-        ingredients.add(new Ingredient(2L, "Cheese", "images/cheese.png"));
-        ingredients.add(new Ingredient(3L, "Peperoni", "images/peperoni.png"));
-        ingredients.add(new Ingredient(4L, "Sauce", "images/sauce.png"));
-        ingredients.add(new Ingredient(5L, "Ricotta", "images/ricotta.png"));
-        ingredients.add(new Ingredient(6L, "Olives", "images/olives.png"));
+        ingredients.add(new Ingredient(1L, "Tomato", "images/tomato.png",1.75));
+        ingredients.add(new Ingredient(2L, "Cheese", "images/cheese.png",2.00));
+        ingredients.add(new Ingredient(3L, "Peperoni", "images/peperoni.png",2.50));
+        ingredients.add(new Ingredient(4L, "Sauce", "images/sauce.png",1.25));
+        ingredients.add(new Ingredient(5L, "Ricotta", "images/ricotta.png",2.25));
+        ingredients.add(new Ingredient(6L, "Olives", "images/olives.png",1.50));
     }
 
     public List<Ingredient> getAllIngredients() {

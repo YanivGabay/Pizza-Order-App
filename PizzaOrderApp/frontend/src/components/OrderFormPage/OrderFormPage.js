@@ -131,7 +131,9 @@ const OrderFormPage = () => {
             });
             const result = await response.json();
             if (response.ok) {
-                navigate(`api/v1/order/${result.id}/pizza`, { state: { orderDetails: result } });
+                
+                navigate(`/order/${result.id}/pizza`, { state: { orderDetails: result } });
+                console.log("navigate to pizza /order/${result.id}/pizza")
             } else {
                 if (result.errors) {
                     setErrors(result.errors);

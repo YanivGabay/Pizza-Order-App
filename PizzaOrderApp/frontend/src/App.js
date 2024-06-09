@@ -14,6 +14,7 @@ import OrderView from "./components/OrderView/OrderView";
 import { OrderProvider } from "./context/OrderContext";
 import OrderDetails from "./components/OrderView/OrderDetails";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import PizzaFormController from "./components/PizzaFormPage/PizzaFormController";
 
 
 const theme = createTheme({
@@ -41,21 +42,18 @@ export default function App() {
 
     <ThemeProvider theme={theme}>
       <OrderProvider>
-      <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/order/new" element={<OrderFormPage />} />
-              
-        <Route path="/order/:orderId" element={<OrderView />}>
-          <Route path="/order/:orderId/pizza" element={<PizzaFormPage />} />
-          <Route index element={<OrderDetails />} />
-        </Route>
+        <Router>
+          <Header />
+          <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/order/new" element={<OrderFormPage />} />
+    <Route path="/order/:orderId" element={<OrderView />} />
+    <Route path="/order/:orderId/pizza" element={<PizzaFormController />}/>
+    <Route path="*" element={<NotFound />} />
+</Routes>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-    </OrderProvider>
-      </ThemeProvider>
+        </Router>
+      </OrderProvider>
+    </ThemeProvider>
   );
 }
