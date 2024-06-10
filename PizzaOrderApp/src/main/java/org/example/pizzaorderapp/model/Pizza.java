@@ -10,11 +10,22 @@ public class Pizza {
     @Valid
     private List<IngredientSelection> ingredients;  // Only IDs and quantities
 
+
+    private Double price;
+
     public Pizza(Long id, List<IngredientSelection> ingredients) {
         this.id = id;
         this.ingredients = ingredients;
     }
 
+    public Double getPrice()
+    {
+        return price;
+    }
+
+    public void setPrice(Double price){
+        this.price = price;
+    }
     // Getters and Setters
     public Long getId() {
         return id;

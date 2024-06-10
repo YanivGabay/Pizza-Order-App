@@ -16,7 +16,7 @@ public class Order {
     @NotNull(message = "Customer info cannot be null")
     private CustomerInfo customerInfo;
 
-    
+    private Double orderTotal;
     private String orderCode;
 
     public Order(CustomerInfo customerInfo, String orderCode,Long id) {
@@ -32,7 +32,12 @@ public class Order {
         this.orderCode = orderCode;
     }
 
+
+
+
     // Getters and Setters
+    public Double getOrderTotal() {return orderTotal;}
+    public void setOrderTotal(Double orderTotal) {this.orderTotal = orderTotal;}
     public Long getId() {
         return id;
     }
