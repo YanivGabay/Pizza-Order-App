@@ -1,4 +1,5 @@
 import React, {createContext, useState, useContext} from 'react';
+import { useEffect } from 'react';
 
 const OrderContext = createContext();
 
@@ -7,6 +8,16 @@ export const OrderProvider = ({ children }) => {
     const [currentOrder, setCurrentOrder] = useState(null);
     const [cart, setCart] = useState([]);
     const [userDetails, setUserDetails] = useState({});
+    const [ingredients, setIngredients] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/v1/ingredients')
+            .then(response => response.json())
+            .then(data => {
+                setIngredients(data);  // Save fetched ingredients in context
+            })
+            .catch(error => console.error('Failed to fetch ingredients:', error));
+    }, []);
 
 
     const addToCart = (pizza) => {
@@ -42,6 +53,8 @@ export const OrderProvider = ({ children }) => {
 
     return (
         <OrderContext.Provider value={{
+            ingredients,
+            setIngredients,
             currentOrder,
             setCurrentOrder,
             cart,

@@ -14,31 +14,34 @@ import { useOrder } from '../../context/OrderContext';
 const PizzaFormPage = () => {
 
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const { orderDetails } = location.state;
-    const [ingredients, setIngredients] = useState([]);
+
     const [formData, setFormData] = useState({});
 
     const { addToCart } = useOrder();
     const {cart} = useOrder();
+    const { ingredients } = useOrder();
     
+    console.log('Ingredients:', ingredients);
+    console.log('FormData:', formData);
+
+
     useEffect(() => {
-        fetch('/api/v1/ingredients')
-            .then(response => response.json())
-            .then(data => {
-                setIngredients(data);
-                setFormData(data.reduce((acc, ingredient) => {
-                    acc[ingredient.name] = { quantity: 0, price: ingredient.price }; 
-                    return acc;
-                }, {}));
-                setLoading(false);
-            })
-            .catch(error => console.error('Failed to fetch ingredients:', error));
-    }, []);
-
-
+        setLoading(true);
+        if (ingredients.length > 0) {
+            const initialFormData = ingredients.reduce((acc, ingredient) => {
+                acc[ingredient.name] = { quantity: 0, price: ingredient.price };
+                return acc;
+            }, {});
+            setFormData(initialFormData);
+            setLoading(false);
+        }
+    }, [ingredients]);  // Depend on ingredients
+    
+       
     const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -121,7 +124,7 @@ const PizzaFormPage = () => {
     
     
 
-    const handleChange = (event, ingredient) => {
+    const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData(prevFormData => ({
             ...prevFormData,
@@ -165,7 +168,7 @@ const PizzaFormPage = () => {
                                                     type="number"
                                                     name={ingredient.name}
                                                     value={formData[ingredient.name].quantity} 
-                                                    onChange={(e) => handleChange(e, ingredient)}
+                                                    onChange={(e) => handleChange(e)}
                                                     error={!!errors[ingredient.name]}
                                                     helperText={errors[ingredient.name]}
                                                     inputProps={{ min: 0, max: 3 }} 

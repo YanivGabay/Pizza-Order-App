@@ -11,7 +11,7 @@ const location = useLocation();
 
 
      useEffect(() => {
-      console.log("in PizzaFormGateway");
+      console.log("in pizzaform controller");
       console.log(location.state);
       console.log(location.state?.orderDetails);
     }
