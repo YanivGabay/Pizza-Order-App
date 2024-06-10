@@ -14,7 +14,7 @@ import { useOrder } from '../../context/OrderContext';
 const PizzaFormPage = () => {
 
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
     const { orderDetails } = location.state;
@@ -24,11 +24,11 @@ const PizzaFormPage = () => {
     const { addToCart } = useOrder();
     const {cart} = useOrder();
     const { ingredients } = useOrder();
-    
+    const { clearOrder } = useOrder();
     console.log('Ingredients:', ingredients);
     console.log('FormData:', formData);
 
-
+  
     useEffect(() => {
         setLoading(true);
         if (ingredients.length > 0) {
@@ -39,9 +39,12 @@ const PizzaFormPage = () => {
             setFormData(initialFormData);
             setLoading(false);
         }
+        else {
+            alert('Failed to fetch ingredients. Please try again later.');
+             }
     }, [ingredients]);  // Depend on ingredients
     
-       
+ 
     const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -68,6 +71,7 @@ const PizzaFormPage = () => {
           
             const result = await response.json();
             if (response.ok) {
+                clearOrder();
                 navigate(`/success/${result.orderCode}`, { state: { orderDetails: result } });
             } else {
                 alert('Failed to update order: ' + (result.error || 'Unknown error'));
