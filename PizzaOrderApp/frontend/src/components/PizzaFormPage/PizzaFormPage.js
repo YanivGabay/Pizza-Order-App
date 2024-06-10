@@ -22,13 +22,15 @@ const PizzaFormPage = () => {
     const [formData, setFormData] = useState({});
 
     const { addToCart } = useOrder();
+    const {cart} = useOrder();
+    
     useEffect(() => {
         fetch('/api/v1/ingredients')
             .then(response => response.json())
             .then(data => {
                 setIngredients(data);
                 setFormData(data.reduce((acc, ingredient) => {
-                    acc[ingredient.name] = { quantity: 0, price: ingredient.price }; // Assume price is also fetched or predefined
+                    acc[ingredient.name] = { quantity: 0, price: ingredient.price }; 
                     return acc;
                 }, {}));
                 setLoading(false);
@@ -37,10 +39,44 @@ const PizzaFormPage = () => {
     }, []);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission
+      
+        if (cart.length === 0) {
+            alert('Please add at least one pizza before finishing the order.');
+            return;
+        }
+        console.log(JSON.stringify({ pizzas: cart }));
+
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/v1/orders/${orderDetails.orderCode}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cart.map(pizza => ({
+                    id: pizza.id,
+                    ingredients: pizza.ingredients.map(ingredient => ({
+                        id: ingredient.id,
+                        quantity: ingredient.quantity
+                    }))
+                })))
+            });
+            
+          
+            const result = await response.json();
+            if (response.ok) {
+                navigate(`/success/${result.orderCode}`, { state: { orderDetails: result } });
+            } else {
+                alert('Failed to update order: ' + (result.error || 'Unknown error'));
+                setErrors(result.errors || {});
+            }
+        } catch (error) {
+            console.error('Failed to submit order:', error);
+            alert('An error occurred while submitting your order.');
+        }
+        setLoading(false);
     }
+    
     const validateForm = () => {
         const newErrors = {};
         ingredients.forEach(ingredient => {
@@ -62,22 +98,28 @@ const PizzaFormPage = () => {
         setFormData({ ...formData });
     };
     const handleAddPizza = () => {
-
-        if (!validateForm()) {
-           // alert("Please correct the errors in the form.");
-            return;
+        if (!validateForm()) return;
+    
+        // Create an array of selected ingredients with non-zero quantities
+        const selectedIngredients = ingredients
+            .filter(ingredient => formData[ingredient.name].quantity > 0)
+            .map(ingredient => ({
+                id: ingredient.id,
+                quantity: formData[ingredient.name].quantity
+            }));
+    
+        if (selectedIngredients.length > 0) {
+            const newPizza = {
+                id: Date.now(), 
+                ingredients: selectedIngredients
+            };
+            addToCart(newPizza);
+            handleReset(); // Reset form after adding to cart
         }
-        const pizza = {
-            ingredients: formData,
-            //to add more details
-            //notes: '',
-            //size: '',
-            //crust: '',
-        };
-        addToCart(pizza);
-        handleReset();
-
     };
+    
+    
+    
 
     const handleChange = (event, ingredient) => {
         const { name, value } = event.target;
@@ -97,7 +139,7 @@ const PizzaFormPage = () => {
         <Box>
             {loading ? (
                 <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
-                    <CircularProgress />  // Loading indicator
+                    <CircularProgress /> 
                 </Box>
             ) : (
                 <Box>
@@ -112,7 +154,7 @@ const PizzaFormPage = () => {
                     <Card sx={{ m: 2 }}>
                         <CardContent>
                             <Grid container spacing={2} justifyContent="center">
-                                <Grid item xs={12} sm={10} md={8} lg={6}>
+                                <Grid item xs={12} sm={10} md={8} lg={6} justifyContent="center">
                                     <form onSubmit={handleSubmit}>
                                         {ingredients.map(ingredient => (
                                             <Grid item xs={12} sm={6} key={ingredient.id}>
@@ -137,8 +179,8 @@ const PizzaFormPage = () => {
                                             <Button onClick={handleAddPizza} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Add Pizza</Button>
                                         </Grid>
                                         <Grid item xs={12} display="flex" justifyContent="center">
-                                            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Submit</Button>
-                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Reset</Button>
+                                            <Button type="submit" onClick={handleSubmit} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Finish Order</Button>
+                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Reset Current Pizza</Button>
                                         </Grid>
 
                                     </form>

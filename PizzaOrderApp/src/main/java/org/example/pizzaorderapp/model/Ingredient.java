@@ -12,7 +12,7 @@ public class Ingredient {
     private String imagePath;
 
     @Min(value = 0, message = "Price must be greater than 0")
-    @NotBlank(message = "Price cannot be empty")
+    @NotNull(message = "Price cannot be empty")
     private Double price;
 
     public Ingredient(Long id, String name, String imagePath, Double price) {

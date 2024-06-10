@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, {createContext, useState, useContext} from 'react';
 
 const OrderContext = createContext();
 
@@ -11,6 +11,7 @@ export const OrderProvider = ({ children }) => {
 
     const addToCart = (pizza) => {
         setCart([...cart, pizza]);
+        console.log(cart);
     };
 
     const removeFromCart = (pizzaId) => {

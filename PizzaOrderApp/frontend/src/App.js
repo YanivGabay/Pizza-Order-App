@@ -49,6 +49,7 @@ export default function App() {
     <Route path="/order/new" element={<OrderFormPage />} />
     <Route path="/order/:orderId" element={<OrderView />} />
     <Route path="/order/:orderId/pizza" element={<PizzaFormController />}/>
+    <Route path="/success/:orderId" element = {<OrderDetails />} />
     <Route path="*" element={<NotFound />} />
 </Routes>
 

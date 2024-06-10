@@ -2,18 +2,15 @@ package org.example.pizzaorderapp.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-
 import java.util.List;
 
 public class Pizza {
     private Long id;
-
-
     @NotNull(message = "Ingredients cannot be null or empty")
     @Valid
-    private List<Ingredient> ingredients;
+    private List<IngredientSelection> ingredients;  // Only IDs and quantities
 
-    public Pizza(Long id, List<Ingredient> ingredients) {
+    public Pizza(Long id, List<IngredientSelection> ingredients) {
         this.id = id;
         this.ingredients = ingredients;
     }
@@ -27,11 +24,12 @@ public class Pizza {
         this.id = id;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<IngredientSelection> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<IngredientSelection> ingredients) {
         this.ingredients = ingredients;
     }
 }
+

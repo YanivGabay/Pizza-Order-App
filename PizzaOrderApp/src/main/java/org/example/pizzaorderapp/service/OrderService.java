@@ -1,8 +1,11 @@
 package org.example.pizzaorderapp.service;
 
 import org.example.pizzaorderapp.model.Order;
+import org.example.pizzaorderapp.model.Pizza;
 import org.springframework.stereotype.Service;
 import org.example.pizzaorderapp.model.CustomerInfo;
+
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,4 +31,14 @@ public class OrderService {
     public Order findOrderByCode(String orderCode) {
         return orders.get(orderCode);
     }
+
+    public Order updateOrder(String orderCode, List<Pizza> pizzas) {
+        Order order = orders.get(orderCode);
+        if (order != null) {
+            order.setPizzas(pizzas);
+            return order;
+        }
+        return null;
+    }
+
 }
