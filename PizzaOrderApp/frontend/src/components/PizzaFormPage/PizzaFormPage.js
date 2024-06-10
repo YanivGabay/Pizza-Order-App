@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
+import PizzaFormHeader from './PizzaFormHeader';
 
 const PizzaFormPage = () => {
 
@@ -146,41 +147,37 @@ const PizzaFormPage = () => {
     return (
         <Box>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
-                    <CircularProgress /> 
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                    <CircularProgress />
                 </Box>
             ) : (
                 <Box>
-                    <Card sx={{ m: 2 }}>
-                        <CardContent>
-                            <Typography variant="h4" align="center">Choose Your Pizza</Typography>
-                            <Typography variant="body1" align="center">Welcome {orderDetails.customerInfo.firstName}</Typography>
-                            <Typography variant="body1" align="center">You choose this address {orderDetails.customerInfo.address}</Typography>
-                            <Typography variant="body1" align="center">Please select the ingredients for your pizza</Typography>
-                        </CardContent>
-                    </Card>
+                    <PizzaFormHeader name={orderDetails.customerInfo.firstName} address={orderDetails.customerInfo.address} />
                     <Card sx={{ m: 2 }}>
                         <CardContent>
                             <Grid container spacing={2} justifyContent="center">
                                 <Grid item xs={12} sm={10} md={8} lg={6} justifyContent="center">
                                     <form onSubmit={handleSubmit}>
                                         {ingredients.map(ingredient => (
-                                            <Grid item xs={12} sm={6} key={ingredient.id}>
-                                                <img src={ingredient.imagePath} alt={ingredient.name} style={{ width: 100, height: 100 }} />
-                                                <TextField
-                                                    key={ingredient.id}
-                                                    label={`${ingredient.name} - $${ingredient.price}`}
-                                                    type="number"
-                                                    name={ingredient.name}
-                                                    value={formData[ingredient.name].quantity} 
-                                                    onChange={(e) => handleChange(e)}
-                                                    error={!!errors[ingredient.name]}
-                                                    helperText={errors[ingredient.name]}
-                                                    inputProps={{ min: 0, max: 3 }} 
-                                                    sx={{ marginBottom: 2 }}
-                                                    fullWidth
-                                                />
-
+                                            <Grid container spacing={2} key={ingredient.id} alignItems="center">
+                                                <Grid item xs={4}>
+                                                    <img src={ingredient.imagePath} alt={ingredient.name} style={{ width: '75px', height: '75px' }} />
+                                                </Grid>
+                                                <Grid item xs={8}>
+                                                    <TextField
+                                                        key={ingredient.id}
+                                                        label={`${ingredient.name} - $${ingredient.price}`}
+                                                        type="number"
+                                                        name={ingredient.name}
+                                                        value={formData[ingredient.name]?.quantity || 0}
+                                                        onChange={(e) => handleChange(e)}
+                                                        error={!!errors[ingredient.name]}
+                                                        helperText={errors[ingredient.name]}
+                                                        inputProps={{ min: 0, max: 3 }}
+                                                        sx={{ marginBottom: 2 }}
+                                                        fullWidth
+                                                    />
+                                                </Grid>
                                             </Grid>
                                         ))}
                                         <Grid item xs={12} display="flex" justifyContent="center">
@@ -190,7 +187,6 @@ const PizzaFormPage = () => {
                                             <Button type="submit" onClick={handleSubmit} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Finish Order</Button>
                                             <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Reset Current Pizza</Button>
                                         </Grid>
-
                                     </form>
                                 </Grid>
                             </Grid>
