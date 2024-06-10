@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+
 
 import {Card, CardContent, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
@@ -11,14 +11,10 @@ const OrderDetails = () => {
   const location = useLocation();
 
   const { orderDetails } = location.state || {}; // Default to an empty object to avoid undefined errors
-  const { ingredients } = useOrder();  // You can access ingredients directly from the context if needed
+
+  const { getIngredientNameById } = useOrder();
 
 
-  const getIngredientNameById = (id) => {
-    const ingredient = ingredients.find(ing => ing.id === id);
-    return ingredient ? ingredient.name : 'Unknown';
-  };
-  
 
 
   return (

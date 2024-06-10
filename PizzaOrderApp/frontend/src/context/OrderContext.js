@@ -37,6 +37,12 @@ export const OrderProvider = ({ children }) => {
         setUserDetails({...userDetails, ...details});
     };
 
+    const getIngredientNameById = (id) => {
+        const ingredient = ingredients.find(ing => ing.id === id);
+        return ingredient ? ingredient.name : 'Unknown';
+      };
+  
+      
     const clearOrder = () => {
         //will get from server
         //the full details for the cookies
@@ -53,6 +59,7 @@ export const OrderProvider = ({ children }) => {
 
     return (
         <OrderContext.Provider value={{
+            getIngredientNameById,
             ingredients,
             setIngredients,
             currentOrder,

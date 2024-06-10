@@ -25,6 +25,7 @@ const PizzaFormPage = () => {
     const {cart} = useOrder();
     const { ingredients } = useOrder();
     const { clearOrder } = useOrder();
+   
     console.log('Ingredients:', ingredients);
     console.log('FormData:', formData);
 

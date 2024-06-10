@@ -19,7 +19,7 @@ import HomeButton from './HomeButton';
 // this.lastName = lastName;
  // this.address = address;
 //  this.phoneNumber = phoneNumber;
-function Home({}) {
+function Home() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -31,7 +31,7 @@ function Home({}) {
                 { <HomeButton text="Order Pizza" to="/order/new" /> }
             </Box>
             <Box>
-                { <HomeButton text="View Orders" to="/order/:orderId" /> }
+                { <HomeButton text="View Orders" to="/order/view" /> }
             </Box>
         </Stack>
         </Box>

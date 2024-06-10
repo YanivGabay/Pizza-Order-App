@@ -9,7 +9,7 @@ import NotFound from "./components/NotFound";
 import Header from "./components/Header";
 import Home from "./components/HomePage/Home";
 import OrderFormPage from "./components/OrderFormPage/OrderFormPage";
-import PizzaFormPage from "./components/PizzaFormPage/PizzaFormPage";
+
 import OrderView from "./components/OrderView/OrderView";
 import { OrderProvider } from "./context/OrderContext";
 import OrderDetails from "./components/OrderView/OrderDetails";
@@ -47,7 +47,7 @@ export default function App() {
           <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/order/new" element={<OrderFormPage />} />
-    <Route path="/order/:orderId" element={<OrderView />} />
+    <Route path="/order/view" element={<OrderView />} />
     <Route path="/order/:orderId/pizza" element={<PizzaFormController />}/>
     <Route path="/success/:orderId" element = {<OrderDetails />} />
     <Route path="*" element={<NotFound />} />
