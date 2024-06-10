@@ -159,9 +159,9 @@ const PizzaFormPage = () => {
                                 <Grid item xs={12} sm={10} md={8} lg={6} justifyContent="center">
                                     <form onSubmit={handleSubmit}>
                                         {ingredients.map(ingredient => (
-                                            <Grid container spacing={2} key={ingredient.id} alignItems="center">
-                                                <Grid item xs={4}>
-                                                    <img src={ingredient.imagePath} alt={ingredient.name} style={{ width: '75px', height: '75px' }} />
+                                            <Grid container spacing={1} key={ingredient.id} alignItems="center">
+                                                <Grid item xs={2}>
+                                                    <img src={ingredient.imagePath} loading="lazy" alt={ingredient.name} style={{ width: '50%', height: '50px' }} />
                                                 </Grid>
                                                 <Grid item xs={8}>
                                                     <TextField
