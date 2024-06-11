@@ -13,7 +13,7 @@ import { useOrder } from '../../context/OrderContext';
 import PizzaFormHeader from './PizzaFormHeader';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
-
+const BASE_PIZZA_PRICE = 2;
 const PizzaFormPage = () => {
 
     const [errors, setErrors] = useState({});
@@ -23,7 +23,7 @@ const PizzaFormPage = () => {
     const { orderDetails } = location.state;
 
     const [formData, setFormData] = useState({});
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(BASE_PIZZA_PRICE);
     const { addToCart } = useOrder();
     const { cart } = useOrder();
     const { ingredients } = useOrder();
@@ -36,6 +36,7 @@ const PizzaFormPage = () => {
     useEffect(() => {
         setLoading(true);
         if (ingredients.length > 0) {
+
             const initialFormData = ingredients.reduce((acc, ingredient) => {
                 acc[ingredient.name] = { quantity: 0, price: ingredient.price, checked: false };
                 return acc;
@@ -47,7 +48,7 @@ const PizzaFormPage = () => {
             alert('Failed to fetch ingredients. Please try again later. returning you home.');
             navigate('/');
         }
-    }, [ingredients]);  // Depend on ingredients
+    }, [ingredients,navigate]);  // Depend on ingredients
 
 
     const handleSubmit = async (e) => {
@@ -103,13 +104,18 @@ const PizzaFormPage = () => {
     };
 
     const handleReset = () => {
-        // Reset form to initial state
-        Object.keys(formData).forEach(key => {
-            formData[key].quantity = 0;
-            formData[key].checked = false;
-        });
-        setFormData({ ...formData });
+        // Create a new object with all quantities set to 0 and checked to false
+        const resetData = Object.keys(formData).reduce((acc, key) => {
+            acc[key] = { ...formData[key], quantity: 0, checked: false };
+            return acc;
+        }, {});
+    
+        setFormData(resetData);
+    
+        // Optionally reset the total price
+        setTotalPrice(BASE_PIZZA_PRICE);
     };
+    
     const handleAddPizza = () => {
         if (!validateForm()) return;
 
@@ -148,7 +154,7 @@ const PizzaFormPage = () => {
                 return acc + (ingredient.checked ? ingredient.price * ingredient.quantity : 0);
             }, 0);
     
-            setTotalPrice(newTotalPrice);
+            setTotalPrice(newTotalPrice+BASE_PIZZA_PRICE);
     
             return newFormData;
         });
@@ -180,7 +186,7 @@ const PizzaFormPage = () => {
                                                     <img src={ingredient.imagePath} loading="lazy" alt={ingredient.name} style={{ width: '50px', height: '50px' }} />
                                                 </Grid>
                                                 <Grid item xs={8}>
-                                                    <Typography variant="body1">{`${ingredient.name} - $${ingredient.price}`}</Typography>
+                                                    <Typography marginBottom={5} variant="body1">{`${ingredient.name} - $${ingredient.price}`}</Typography>
                                                     <Slider
                                                         disabled={!formData[ingredient.name]?.checked}
                                                         value={formData[ingredient.name]?.quantity || 0}
