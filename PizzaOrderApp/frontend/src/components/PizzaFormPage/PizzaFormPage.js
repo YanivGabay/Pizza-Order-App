@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
 import PizzaFormHeader from './PizzaFormHeader';
+import Slider from '@mui/material/Slider';
+import Checkbox from '@mui/material/Checkbox';
 
 const PizzaFormPage = () => {
 
@@ -21,35 +23,36 @@ const PizzaFormPage = () => {
     const { orderDetails } = location.state;
 
     const [formData, setFormData] = useState({});
-
+    const [totalPrice, setTotalPrice] = useState(0);
     const { addToCart } = useOrder();
-    const {cart} = useOrder();
+    const { cart } = useOrder();
     const { ingredients } = useOrder();
     const { clearOrder } = useOrder();
-   
+
     console.log('Ingredients:', ingredients);
     console.log('FormData:', formData);
 
-  
+
     useEffect(() => {
         setLoading(true);
         if (ingredients.length > 0) {
             const initialFormData = ingredients.reduce((acc, ingredient) => {
-                acc[ingredient.name] = { quantity: 0, price: ingredient.price };
+                acc[ingredient.name] = { quantity: 0, price: ingredient.price, checked: false };
                 return acc;
             }, {});
             setFormData(initialFormData);
             setLoading(false);
         }
         else {
-            alert('Failed to fetch ingredients. Please try again later.');
-             }
+            alert('Failed to fetch ingredients. Please try again later. returning you home.');
+            navigate('/');
+        }
     }, [ingredients]);  // Depend on ingredients
-    
- 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-      
+
         if (cart.length === 0) {
             alert('Please add at least one pizza before finishing the order.');
             return;
@@ -69,8 +72,8 @@ const PizzaFormPage = () => {
                     }))
                 })))
             });
-            
-          
+
+
             const result = await response.json();
             if (response.ok) {
                 clearOrder();
@@ -85,7 +88,7 @@ const PizzaFormPage = () => {
         }
         setLoading(false);
     }
-    
+
     const validateForm = () => {
         const newErrors = {};
         ingredients.forEach(ingredient => {
@@ -94,21 +97,22 @@ const PizzaFormPage = () => {
                 newErrors[ingredient.name] = 'Quantity must be between 0 and 3';
             }
         });
-    
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleReset = () => {
         // Reset form to initial state
         Object.keys(formData).forEach(key => {
             formData[key].quantity = 0;
+            formData[key].checked = false;
         });
         setFormData({ ...formData });
     };
     const handleAddPizza = () => {
         if (!validateForm()) return;
-    
+
         // Create an array of selected ingredients with non-zero quantities
         const selectedIngredients = ingredients
             .filter(ingredient => formData[ingredient.name].quantity > 0)
@@ -116,38 +120,47 @@ const PizzaFormPage = () => {
                 id: ingredient.id,
                 quantity: formData[ingredient.name].quantity
             }));
-    
+
         if (selectedIngredients.length > 0) {
             const newPizza = {
-                id: Date.now(), 
+                id: Date.now(),
                 ingredients: selectedIngredients
             };
             addToCart(newPizza);
             handleReset(); // Reset form after adding to cart
         }
     };
-    
-    
-    
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            [name]: {
-                ...prevFormData[name],
-                quantity: value === "" ? "" : Number(value)
-            }
-        }));
-        validateForm();
 
+    const handleChange = (id, value, checked) => {
+        setFormData(prevFormData => {
+            const newFormData = {
+                ...prevFormData,
+                [id]: {
+                    ...prevFormData[id],
+                    quantity: checked ? value : 0,
+                    checked: checked
+                }
+            };
+    
+            // Calculate the new total price right here inside setFormData
+            const newTotalPrice = Object.values(newFormData).reduce((acc, ingredient) => {
+                return acc + (ingredient.checked ? ingredient.price * ingredient.quantity : 0);
+            }, 0);
+    
+            setTotalPrice(newTotalPrice);
+    
+            return newFormData;
+        });
     };
     
-    
+
+
+
     return (
         <Box>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
                     <CircularProgress />
                 </Box>
             ) : (
@@ -156,26 +169,35 @@ const PizzaFormPage = () => {
                     <Card sx={{ m: 2 }}>
                         <CardContent>
                             <Grid container spacing={2} justifyContent="center">
+                                <Grid item xs={12} display="flex" justifyContent="center">
+                                <Typography variant="h5">Total Price: ${totalPrice.toFixed(2)}</Typography>
+                                </Grid>
                                 <Grid item xs={12} sm={10} md={8} lg={6} justifyContent="center">
                                     <form onSubmit={handleSubmit}>
                                         {ingredients.map(ingredient => (
-                                            <Grid container spacing={1} key={ingredient.id} alignItems="center">
+                                            <Grid container spacing={1} key={ingredient.name} alignItems="center">
                                                 <Grid item xs={2}>
-                                                    <img src={ingredient.imagePath} loading="lazy" alt={ingredient.name} style={{ width: '50%', height: '50px' }} />
+                                                    <img src={ingredient.imagePath} loading="lazy" alt={ingredient.name} style={{ width: '50px', height: '50px' }} />
                                                 </Grid>
                                                 <Grid item xs={8}>
-                                                    <TextField
-                                                        key={ingredient.id}
-                                                        label={`${ingredient.name} - $${ingredient.price}`}
-                                                        type="number"
-                                                        name={ingredient.name}
+                                                    <Typography variant="body1">{`${ingredient.name} - $${ingredient.price}`}</Typography>
+                                                    <Slider
+                                                        disabled={!formData[ingredient.name]?.checked}
                                                         value={formData[ingredient.name]?.quantity || 0}
-                                                        onChange={(e) => handleChange(e)}
-                                                        error={!!errors[ingredient.name]}
-                                                        helperText={errors[ingredient.name]}
-                                                        inputProps={{ min: 0, max: 3 }}
-                                                        sx={{ marginBottom: 2 }}
-                                                        fullWidth
+                                                        onChange={(e, value) => handleChange(ingredient.name, value, true)}
+                                                        aria-labelledby="input-slider"
+                                                        valueLabelDisplay="on"
+                                                        step={1}
+                                                        marks
+                                                        min={0}
+                                                        max={3}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <Checkbox
+                                                        checked={formData[ingredient.name]?.checked || false}
+                                                        onChange={(e) => handleChange(ingredient.name, formData[ingredient.name].quantity, e.target.checked)}
+                                                        inputProps={{ 'aria-label': 'primary checkbox' }}
                                                     />
                                                 </Grid>
                                             </Grid>

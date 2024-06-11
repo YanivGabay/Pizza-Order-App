@@ -12,11 +12,11 @@ public class IngredientService {
 
     public IngredientService() {
         ingredients.add(new Ingredient(1L, "Tomato", "/tomato.jpg",1.75));
-        ingredients.add(new Ingredient(2L, "Cheese", "images/cheese.png",2.00));
-        ingredients.add(new Ingredient(3L, "Peperoni", "images/peperoni.png",2.50));
+        ingredients.add(new Ingredient(2L, "Cheese", "/cheese.jpg",2.00));
+        ingredients.add(new Ingredient(3L, "Peperoni", "/peperoni.jpg",2.50));
         ingredients.add(new Ingredient(4L, "Sauce", "/sauce.jpg",1.25));
-        ingredients.add(new Ingredient(5L, "Ricotta", "images/ricotta.png",2.25));
-        ingredients.add(new Ingredient(6L, "Olives", "images/olives.png",1.50));
+        ingredients.add(new Ingredient(5L, "Ricotta", "/ricotta.jpg",2.25));
+        ingredients.add(new Ingredient(6L, "Olives", "/olives.jpg",1.50));
     }
 
     public List<Ingredient> getAllIngredients() {
