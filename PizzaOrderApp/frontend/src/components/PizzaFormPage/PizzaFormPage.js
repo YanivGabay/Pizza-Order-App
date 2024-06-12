@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Box, Grid } from '@mui/material';
-import { TextField } from '@mui/material';
+
 import { Button } from '@mui/material';
 import { Card } from '@mui/material';
 import { CardContent } from '@mui/material';
@@ -14,24 +14,28 @@ import PizzaFormHeader from './PizzaFormHeader';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
 import PizzaFormTotal from './PizzaFormTotal';
+
+import { useSnackbar } from '../../context/SnackbarContext';
+
 const BASE_PIZZA_PRICE = 2;
 const PizzaFormPage = () => {
 
+    const location = useLocation(); 
+    const navigate = useNavigate();
+
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { orderDetails } = location.state;
-
     const [formData, setFormData] = useState({});
     const [totalPrice, setTotalPrice] = useState(BASE_PIZZA_PRICE);
+
+    const {enqueueSnackbar} = useSnackbar();
+    const { orderDetails } = location.state;
     const { addToCart } = useOrder();
     const { cart } = useOrder();
     const { ingredients } = useOrder();
     const { clearOrder } = useOrder();
 
-    console.log('Ingredients:', ingredients);
-    console.log('FormData:', formData);
+
 
 
     useEffect(() => {
@@ -46,20 +50,22 @@ const PizzaFormPage = () => {
             setLoading(false);
         }
         else {
-            alert('Failed to fetch ingredients. Please try again later. returning you home.');
+            enqueueSnackbar('Failed to fetch ingredients. Please try again later. returning you home.', 'error');
+            
             navigate('/');
         }
-    }, [ingredients,navigate]);  // Depend on ingredients
+    }, [ingredients, navigate]);  // Depend on ingredients
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (cart.length === 0) {
-            alert('Please add at least one pizza before finishing the order.');
+            enqueueSnackbar('Please add at least one pizza before finishing the order.', 'error');
+           
             return;
         }
-        console.log(JSON.stringify({ pizzas: cart }));
+        
 
         setLoading(true);
         try {
@@ -81,12 +87,13 @@ const PizzaFormPage = () => {
                 clearOrder();
                 navigate(`/success/${result.orderCode}`, { state: { orderDetails: result } });
             } else {
-                alert('Failed to update order: ' + (result.error || 'Unknown error'));
+                enqueueSnackbar('Failed to update order: ' + (result.error || 'Unknown error'), 'error');
+               
                 setErrors(result.errors || {});
             }
         } catch (error) {
-            console.error('Failed to submit order:', error);
-            alert('An error occurred while submitting your order.');
+            
+            enqueueSnackbar('An error occurred. Please try again later.', 'error');
         }
         setLoading(false);
     }
@@ -110,13 +117,13 @@ const PizzaFormPage = () => {
             acc[key] = { ...formData[key], quantity: 0, checked: false };
             return acc;
         }, {});
-    
+
         setFormData(resetData);
-    
+
         // Optionally reset the total price
         setTotalPrice(BASE_PIZZA_PRICE);
     };
-    
+
     const handleAddPizza = () => {
         if (!validateForm()) return;
 
@@ -149,18 +156,18 @@ const PizzaFormPage = () => {
                     checked: checked
                 }
             };
-    
+
             // Calculate the new total price right here inside setFormData
             const newTotalPrice = Object.values(newFormData).reduce((acc, ingredient) => {
                 return acc + (ingredient.checked ? ingredient.price * ingredient.quantity : 0);
             }, 0);
-    
-            setTotalPrice(newTotalPrice+BASE_PIZZA_PRICE);
-    
+
+            setTotalPrice(newTotalPrice + BASE_PIZZA_PRICE);
+
             return newFormData;
         });
     };
-    
+
 
 
 
@@ -172,6 +179,7 @@ const PizzaFormPage = () => {
                 </Box>
             ) : (
                 <Box>
+                  
                     <PizzaFormHeader name={orderDetails.customerInfo.firstName} address={orderDetails.customerInfo.address} />
                     <Card sx={{ m: 2 }}>
                         <CardContent>

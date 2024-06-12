@@ -9,7 +9,7 @@ const PizzaFormTotal = ({ totalPrice }) => {
         <Grid marginBlockEnd={5} container justifyContent="center">
           <Grid item xs={12}>
             <Typography variant="h5" textAlign="center">
-              Total Price: ${totalPrice.toFixed(2)}
+              Current Pizza Total Price: ${totalPrice.toFixed(2)}
             </Typography>
           </Grid>
           {totalPrice === 2.00 && (

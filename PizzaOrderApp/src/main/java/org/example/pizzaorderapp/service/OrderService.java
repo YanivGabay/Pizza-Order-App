@@ -1,5 +1,6 @@
 package org.example.pizzaorderapp.service;
 
+import org.example.pizzaorderapp.config.PricingConfig;
 import org.example.pizzaorderapp.model.IngredientSelection;
 import org.example.pizzaorderapp.model.Order;
 import org.example.pizzaorderapp.model.Pizza;
@@ -19,6 +20,7 @@ public class OrderService {
     private final Map<String, Order> orders = new ConcurrentHashMap<>();
     private final AtomicLong orderCounter = new AtomicLong();
     private final IngredientService ingredientService;
+
 
     @Autowired
     public OrderService(IngredientService ingredientService) {
@@ -56,7 +58,7 @@ public class OrderService {
         List<Pizza> pizzas = order.getPizzas();
         double orderTotal = 0;
         for (Pizza pizza : pizzas) {
-            double pizzaPrice = 0;
+            double pizzaPrice = PricingConfig.getBasePizzaPrice();
             for (IngredientSelection ingredient : pizza.getIngredients()) {
                 double ingredientPrice = getPriceForIngredient(ingredient.getId());
                 pizzaPrice += ingredientPrice * ingredient.getQuantity();

@@ -9,11 +9,11 @@ import { CardContent } from '@mui/material';
 import { Typography } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import { useCookies } from 'react-cookie';
-
+import { useSnackbar } from '../../context/SnackbarContext';
 
 const OrderFormPage = () => {
 
-
+    const {enqueueSnackbar} = useSnackbar();
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -41,7 +41,8 @@ const OrderFormPage = () => {
                 setFormData(initialData);
                 setLoading(false);
             })
-            .catch(error => console.error('Failed to fetch form structure:', error));
+            .catch(error => {enqueueSnackbar('Failed to fetch form structure. Please try again later. error: '+error, 'error');})
+            //.catch(error => console.error('Failed to fetch form structure:', error));
     },[cookies] );
 
 
@@ -142,12 +143,12 @@ const OrderFormPage = () => {
                 if (result.errors) {
                     setErrors(result.errors);
                 } else {
-                    alert('An error occurred. Please try again later.');
+                    enqueueSnackbar('Failed to submit order. Please try again later.', 'error');
                 }
             }
         } catch (error) {
            
-            alert('An error occurred. Please try again later.');
+            enqueueSnackbar('An error occurred. Please try again later. error:' + error, 'error');
         }
         setLoading(false);
     };
@@ -174,7 +175,7 @@ const OrderFormPage = () => {
                         <CardContent>
                             <Typography variant="h4" align="center">Order Form</Typography>
                             <Typography variant="body1" align="center">Please fill out the form below to place your order.</Typography>
-                            <Button type="button" onClick={()=> navigate(-1)} >Back</Button>
+                          
                         </CardContent>
                     </Card>
                     <Card sx={{ m: 2 }}>
