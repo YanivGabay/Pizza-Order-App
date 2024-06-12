@@ -19,8 +19,14 @@ const OrderDetails = () => {
 
   return (
     <Box>
-      <Typography variant="h4">Order Details</Typography>
-      <Card>
+      <Card sx={{ m: 2 }}>
+        <CardContent>
+      <Typography variant="h4">Order Added Successfully</Typography>
+        <Typography variant="h4">Order Details:</Typography>
+        </CardContent>
+      </Card>
+    
+      <Card sx={{ m: 2 }}>
         <CardContent>
           <Typography variant="h6">Order Code: {orderDetails.orderCode}</Typography>
           <Typography variant="h6">Total Price: {orderDetails.orderTotal}</Typography>

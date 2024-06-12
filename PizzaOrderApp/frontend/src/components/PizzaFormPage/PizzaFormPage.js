@@ -13,6 +13,7 @@ import { useOrder } from '../../context/OrderContext';
 import PizzaFormHeader from './PizzaFormHeader';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
+import PizzaFormTotal from './PizzaFormTotal';
 const BASE_PIZZA_PRICE = 2;
 const PizzaFormPage = () => {
 
@@ -166,7 +167,7 @@ const PizzaFormPage = () => {
     return (
         <Box>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
                     <CircularProgress />
                 </Box>
             ) : (
@@ -174,56 +175,48 @@ const PizzaFormPage = () => {
                     <PizzaFormHeader name={orderDetails.customerInfo.firstName} address={orderDetails.customerInfo.address} />
                     <Card sx={{ m: 2 }}>
                         <CardContent>
-                            <Grid container spacing={2} justifyContent="center">
-                                <Grid item xs={12} display="flex" justifyContent="center">
-                                <Typography variant="h5">Total Price: ${totalPrice.toFixed(2)}</Typography>
-                                </Grid>
-                                <Grid item xs={12} sm={10} md={8} lg={6} justifyContent="center">
-                                    <form onSubmit={handleSubmit}>
-                                        {ingredients.map(ingredient => (
-                                            <Grid container spacing={1} key={ingredient.name} alignItems="center">
-                                                <Grid item xs={2}>
-                                                    <img src={ingredient.imagePath} loading="lazy" alt={ingredient.name} style={{ width: '50px', height: '50px' }} />
-                                                </Grid>
-                                                <Grid item xs={8}>
-                                                    <Typography marginBottom={5} variant="body1">{`${ingredient.name} - $${ingredient.price}`}</Typography>
-                                                    <Slider
-                                                        disabled={!formData[ingredient.name]?.checked}
-                                                        value={formData[ingredient.name]?.quantity || 0}
-                                                        onChange={(e, value) => handleChange(ingredient.name, value, true)}
-                                                        aria-labelledby="input-slider"
-                                                        valueLabelDisplay="on"
-                                                        step={1}
-                                                        marks
-                                                        min={0}
-                                                        max={3}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <Checkbox
-                                                        checked={formData[ingredient.name]?.checked || false}
-                                                        onChange={(e) => handleChange(ingredient.name, formData[ingredient.name].quantity, e.target.checked)}
-                                                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                                                    />
-                                                </Grid>
+                            <PizzaFormTotal totalPrice={totalPrice} />
+                            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                                <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+                                    {ingredients.map(ingredient => (
+                                        <Grid item xs={12} key={ingredient.name} container spacing={1} alignItems="center">
+                                            <Grid item xs={2}>
+                                                <img src={ingredient.imagePath} alt={ingredient.name} style={{ width: '50px', height: '50px' }} />
                                             </Grid>
-                                        ))}
-                                        <Grid item xs={12} display="flex" justifyContent="center">
-                                            <Button onClick={handleAddPizza} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Add Pizza</Button>
+                                            <Grid item xs={8}>
+                                                <Typography variant="body1" gutterBottom>{`${ingredient.name} - $${ingredient.price}`}</Typography>
+                                                <Slider
+                                                    disabled={!formData[ingredient.name]?.checked}
+                                                    value={formData[ingredient.name]?.quantity || 0}
+                                                    onChange={(e, value) => handleChange(ingredient.name, value, true)}
+                                                    valueLabelDisplay="auto"
+                                                    step={1}
+                                                    marks
+                                                    min={0}
+                                                    max={3}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Checkbox
+                                                    checked={formData[ingredient.name]?.checked || false}
+                                                    onChange={(e) => handleChange(ingredient.name, formData[ingredient.name].quantity, e.target.checked)}
+                                                />
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={12} display="flex" justifyContent="center">
-                                            <Button type="submit" onClick={handleSubmit} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Finish Order</Button>
-                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Reset Current Pizza</Button>
-                                        </Grid>
-                                    </form>
-                                </Grid>
+                                    ))}
+                                    <Grid item xs={12} display="flex" justifyContent="center" marginTop={2}>
+                                        <Button onClick={handleAddPizza} variant="contained" sx={{ mr: 1 }}>Add Pizza</Button>
+                                        <Button type="submit" variant="contained" sx={{ mr: 1 }}>Finish Order</Button>
+                                        <Button onClick={handleReset} variant="contained">Reset Current Pizza</Button>
+                                    </Grid>
+                                </form>
                             </Grid>
                         </CardContent>
                     </Card>
                 </Box>
             )}
         </Box>
-    )
+    );
 }
 
 export default PizzaFormPage

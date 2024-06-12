@@ -8,7 +8,7 @@ import { Card } from '@mui/material';
 import { CardContent } from '@mui/material';
 import { Typography } from '@mui/material';
 import { CircularProgress } from '@mui/material';
-
+import { useCookies } from 'react-cookie';
 
 
 const OrderFormPage = () => {
@@ -19,13 +19,30 @@ const OrderFormPage = () => {
     const navigate = useNavigate();
     const [formFields, setFormFields] = useState([]);
     const [formData, setFormData] = useState({});
-
+    const [cookies] = useCookies(['firstName', 'lastName', 'address', 'phoneNumber']);
     // A simple representation to mimic backend structure
     const exampleFormField = {
         fieldName: 'exampleName',
         fieldType: 'text',
         required: true
     };
+
+    useEffect(() => {
+        fetch('/api/v1/form-structure')
+            .then(response => response.json())
+            .then(data => {
+                setFormFields(data);
+                let initialData = {};
+                data.forEach(field => {
+                 
+                    const cookieValue = cookies[field.fieldName] ? decodeURIComponent(cookies[field.fieldName]).replace(/\+/g, ' ') : '';
+                    initialData[field.fieldName] = cookieValue || initializeFieldValue(field.fieldType);
+                });
+                setFormData(initialData);
+                setLoading(false);
+            })
+            .catch(error => console.error('Failed to fetch form structure:', error));
+    },[cookies] );
 
 
     const validateField = (name, value) => {
@@ -68,20 +85,7 @@ const OrderFormPage = () => {
         }
     }
 
-    useEffect(() => {
-        fetch('/api/v1/form-structure')
-            .then(response => response.json())
-            .then(data => {
-                setFormFields(data);
-                let initialData = {};
-                data.forEach(field => {
-                    initialData[field.fieldName] = initializeFieldValue(field.fieldType);
-                });
-                setFormData(initialData);
-                setLoading(false);
-            })
-            .catch(error => console.error('Failed to fetch form structure:', error));
-    }, []);
+
 
 
     const handleChange = (event) => {
@@ -133,7 +137,7 @@ const OrderFormPage = () => {
             if (response.ok) {
                 
                 navigate(`/order/${result.id}/pizza`, { state: { orderDetails: result } });
-                console.log("navigate to pizza /order/${result.id}/pizza")
+               
             } else {
                 if (result.errors) {
                     setErrors(result.errors);
@@ -142,7 +146,7 @@ const OrderFormPage = () => {
                 }
             }
         } catch (error) {
-            console.error('Failed to submit form:', error);
+           
             alert('An error occurred. Please try again later.');
         }
         setLoading(false);
@@ -162,7 +166,7 @@ const OrderFormPage = () => {
         <Box>
             {loading ? (
                 <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
-                    <CircularProgress />  // Loading indicator
+                    <CircularProgress />  
                 </Box>
             ) : (
                 <Box>
@@ -170,6 +174,7 @@ const OrderFormPage = () => {
                         <CardContent>
                             <Typography variant="h4" align="center">Order Form</Typography>
                             <Typography variant="body1" align="center">Please fill out the form below to place your order.</Typography>
+                            <Button type="button" onClick={()=> navigate(-1)} >Back</Button>
                         </CardContent>
                     </Card>
                     <Card sx={{ m: 2 }}>

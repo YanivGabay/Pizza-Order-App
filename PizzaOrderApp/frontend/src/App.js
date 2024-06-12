@@ -15,6 +15,7 @@ import { OrderProvider } from "./context/OrderContext";
 import OrderDetails from "./components/OrderView/OrderDetails";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import PizzaFormController from "./components/PizzaFormPage/PizzaFormController";
+import { CookiesProvider } from "react-cookie";
 
 
 const theme = createTheme({
@@ -39,7 +40,7 @@ export default function App() {
     //in the future. to acess the cart more easily
     //the cart should have it own context?
     //<CartProvider>
-
+    <CookiesProvider>
     <ThemeProvider theme={theme}>
       <OrderProvider>
         <Router>
@@ -56,5 +57,6 @@ export default function App() {
         </Router>
       </OrderProvider>
     </ThemeProvider>
+    </CookiesProvider>
   );
 }
