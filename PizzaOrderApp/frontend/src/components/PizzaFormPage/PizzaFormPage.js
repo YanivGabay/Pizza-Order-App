@@ -54,7 +54,7 @@ const PizzaFormPage = () => {
             
             navigate('/');
         }
-    }, [ingredients, navigate]);  // Depend on ingredients
+    }, [ingredients, navigate,enqueueSnackbar]);  // Depend on ingredients
 
 
     const handleSubmit = async (e) => {
@@ -138,6 +138,7 @@ const PizzaFormPage = () => {
         if (selectedIngredients.length > 0) {
             const newPizza = {
                 id: Date.now(),
+                name: `Pizza ${cart.length + 1}`,
                 ingredients: selectedIngredients
             };
             addToCart(newPizza);

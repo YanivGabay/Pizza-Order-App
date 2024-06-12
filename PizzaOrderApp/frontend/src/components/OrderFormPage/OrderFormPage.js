@@ -42,8 +42,8 @@ const OrderFormPage = () => {
                 setLoading(false);
             })
             .catch(error => {enqueueSnackbar('Failed to fetch form structure. Please try again later. error: '+error, 'error');})
-            //.catch(error => console.error('Failed to fetch form structure:', error));
-    },[cookies] );
+         
+    },[cookies,enqueueSnackbar] );
 
 
     const validateField = (name, value) => {
@@ -62,6 +62,8 @@ const OrderFormPage = () => {
                 break;
             case 'email':
                 if (value && !/\S+@\S+\.\S+/.test(value)) error = 'Invalid email address';
+                break;
+            default:
                 break;
 
         }

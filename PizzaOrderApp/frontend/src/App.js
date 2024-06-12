@@ -17,7 +17,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import PizzaFormController from "./components/PizzaFormPage/PizzaFormController";
 import { CookiesProvider } from "react-cookie";
 import { SnackbarProvider } from "./context/SnackbarContext";
-
+import { CartProvider } from "./context/CartContext";
+import CartModal from "./components/CartModal/CartModal";
 
 const theme = createTheme({
   palette: {
@@ -43,24 +44,29 @@ export default function App() {
     //<CartProvider>
     <SnackbarProvider>
 
-    <CookiesProvider>
-    <ThemeProvider theme={theme}>
-      <OrderProvider>
-        <Router>
-          <Header />
-          <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/order/new" element={<OrderFormPage />} />
-    <Route path="/order/view" element={<OrderView />} />
-    <Route path="/order/:orderId/pizza" element={<PizzaFormController />}/>
-    <Route path="/success/:orderId" element = {<OrderDetails />} />
-    <Route path="*" element={<NotFound />} />
-</Routes>
+      <CookiesProvider>
+        <ThemeProvider theme={theme}>
+          <OrderProvider>
+            <CartProvider> 
 
-        </Router>
-      </OrderProvider>
-    </ThemeProvider>
-    </CookiesProvider>
+              <Router>
+                <Header />
+                <CartModal /> 
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/order/new" element={<OrderFormPage />} />
+                  <Route path="/order/view" element={<OrderView />} />
+                  <Route path="/order/:orderId/pizza" element={<PizzaFormController />} />
+                  <Route path="/success/:orderId" element={<OrderDetails />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+
+              </Router>
+
+            </CartProvider>
+          </OrderProvider>
+        </ThemeProvider>
+      </CookiesProvider>
     </SnackbarProvider>
   );
 }
