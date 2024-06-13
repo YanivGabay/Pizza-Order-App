@@ -17,7 +17,7 @@ const PizzaFormGateway = () => {
         if (!location.state?.orderDetails) {
            enqueueSnackbar('Order details not found', 'error');
         }
-    }, [location.state]);
+    }, [location.state, enqueueSnackbar]);
 
     return (
         location.state?.orderDetails ? (

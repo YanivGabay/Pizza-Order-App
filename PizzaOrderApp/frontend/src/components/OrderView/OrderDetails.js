@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Box, List, ListItem, ListItemText, Divider } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useOrder } from "../../context/OrderContext";
-
+import React from "react";
 /**
  * Renders the order details.
  * 
