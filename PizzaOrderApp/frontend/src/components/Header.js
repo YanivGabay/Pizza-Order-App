@@ -6,14 +6,25 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useOrder } from '../context/OrderContext';
 import { useCart } from '../context/CartContext';
 
-function Header({children}) {
+/**
+ * Header component to display the application header with navigation and cart information.
+ * 
+ * @component
+ * @param {Object} props - The component props
+ * @param {ReactNode} props.children - The child components
+ * @returns {JSX.Element} The rendered component
+ */
+function Header({ children }) {
     const navigate = useNavigate();
     const { cart } = useOrder();
-    const { toggleCartModal } = useCart();  // Corrected function name
+    const { toggleCartModal } = useCart();
     const cartCount = cart.length;
 
+    /**
+     * Navigates to the home page.
+     */
     const goHome = () => {
-        navigate('/');  // Navigate back to the home page
+        navigate('/');
     };
 
     return (
@@ -23,7 +34,7 @@ function Header({children}) {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Mario's Pizza
                     </Typography>
-                    <IconButton color="primaryLight" onClick={toggleCartModal}>
+                    <IconButton color="inherit" onClick={toggleCartModal}>
                         <Badge badgeContent={cartCount} color="secondary">
                             <ShoppingCartIcon />
                         </Badge>

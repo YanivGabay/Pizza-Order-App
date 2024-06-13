@@ -1,71 +1,57 @@
-import React, { useEffect } from 'react'
-import { Box, Grid } from '@mui/material';
-
-import { Button } from '@mui/material';
-import { Card } from '@mui/material';
-import { CardContent } from '@mui/material';
-import { Typography } from '@mui/material';
-import { CircularProgress } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Box, Grid, Button, Card, CardContent, Typography, CircularProgress, Slider, Checkbox } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
 import PizzaFormHeader from './PizzaFormHeader';
-import Slider from '@mui/material/Slider';
-import Checkbox from '@mui/material/Checkbox';
 import PizzaFormTotal from './PizzaFormTotal';
-
 import { useSnackbar } from '../../context/SnackbarContext';
 
 const BASE_PIZZA_PRICE = 2;
+
+/**
+ * Renders the pizza form page to select ingredients for a pizza order.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered PizzaFormPage component
+ */
 const PizzaFormPage = () => {
-
-    const location = useLocation(); 
+    const location = useLocation();
     const navigate = useNavigate();
-
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({});
     const [totalPrice, setTotalPrice] = useState(BASE_PIZZA_PRICE);
-
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const { orderDetails } = location.state;
-    const { addToCart } = useOrder();
-    const { cart } = useOrder();
-    const { ingredients } = useOrder();
-    const { clearOrder } = useOrder();
-
-
-
+    const { addToCart, cart, ingredients, clearOrder } = useOrder();
 
     useEffect(() => {
         setLoading(true);
         if (ingredients.length > 0) {
-
             const initialFormData = ingredients.reduce((acc, ingredient) => {
                 acc[ingredient.name] = { quantity: 0, price: ingredient.price, checked: false };
                 return acc;
             }, {});
             setFormData(initialFormData);
             setLoading(false);
-        }
-        else {
-            enqueueSnackbar('Failed to fetch ingredients. Please try again later. returning you home.', 'error');
-            
+        } else {
+            enqueueSnackbar('Failed to fetch ingredients. Please try again later. Returning you home.', 'error');
             navigate('/');
         }
-    }, [ingredients, navigate,enqueueSnackbar]);  // Depend on ingredients
+    }, [ingredients, navigate, enqueueSnackbar]);
 
-
+    /**
+     * Handles form submission to finalize the order.
+     * 
+     * @param {Event} e - The submit event
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (cart.length === 0) {
             enqueueSnackbar('Please add at least one pizza before finishing the order.', 'error');
-           
             return;
         }
-        
 
         setLoading(true);
         try {
@@ -81,23 +67,25 @@ const PizzaFormPage = () => {
                 })))
             });
 
-
             const result = await response.json();
             if (response.ok) {
                 clearOrder();
                 navigate(`/success/${result.orderCode}`, { state: { orderDetails: result } });
             } else {
                 enqueueSnackbar('Failed to update order: ' + (result.error || 'Unknown error'), 'error');
-               
                 setErrors(result.errors || {});
             }
         } catch (error) {
-            
             enqueueSnackbar('An error occurred. Please try again later.', 'error');
         }
         setLoading(false);
-    }
+    };
 
+    /**
+     * Validates the form to ensure all quantities are within acceptable ranges.
+     * 
+     * @returns {boolean} True if the form is valid, otherwise false
+     */
     const validateForm = () => {
         const newErrors = {};
         ingredients.forEach(ingredient => {
@@ -111,23 +99,25 @@ const PizzaFormPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+    /**
+     * Resets the form data and total price.
+     */
     const handleReset = () => {
-        // Create a new object with all quantities set to 0 and checked to false
         const resetData = Object.keys(formData).reduce((acc, key) => {
             acc[key] = { ...formData[key], quantity: 0, checked: false };
             return acc;
         }, {});
 
         setFormData(resetData);
-
-        // Optionally reset the total price
         setTotalPrice(BASE_PIZZA_PRICE);
     };
 
+    /**
+     * Adds a pizza with selected ingredients to the cart.
+     */
     const handleAddPizza = () => {
         if (!validateForm()) return;
 
-        // Create an array of selected ingredients with non-zero quantities
         const selectedIngredients = ingredients
             .filter(ingredient => formData[ingredient.name].quantity > 0)
             .map(ingredient => ({
@@ -146,7 +136,13 @@ const PizzaFormPage = () => {
         }
     };
 
-
+    /**
+     * Handles changes to the ingredient selection, updating the form data and total price.
+     * 
+     * @param {string} id - The ID of the ingredient
+     * @param {number} value - The quantity of the ingredient
+     * @param {boolean} checked - Whether the ingredient is selected
+     */
     const handleChange = (id, value, checked) => {
         setFormData(prevFormData => {
             const newFormData = {
@@ -158,7 +154,6 @@ const PizzaFormPage = () => {
                 }
             };
 
-            // Calculate the new total price right here inside setFormData
             const newTotalPrice = Object.values(newFormData).reduce((acc, ingredient) => {
                 return acc + (ingredient.checked ? ingredient.price * ingredient.quantity : 0);
             }, 0);
@@ -169,9 +164,6 @@ const PizzaFormPage = () => {
         });
     };
 
-
-
-
     return (
         <Box>
             {loading ? (
@@ -180,7 +172,6 @@ const PizzaFormPage = () => {
                 </Box>
             ) : (
                 <Box>
-                  
                     <PizzaFormHeader name={orderDetails.customerInfo.firstName} address={orderDetails.customerInfo.address} />
                     <Card sx={{ m: 2 }}>
                         <CardContent>
@@ -228,4 +219,4 @@ const PizzaFormPage = () => {
     );
 }
 
-export default PizzaFormPage
+export default PizzaFormPage;

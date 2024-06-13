@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
-import { Button, TextField, Box, Typography, Card, CardContent } from '@mui/material';
+import { Button, TextField, Box, Typography, Card, CardContent, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { useOrder } from '../../context/OrderContext';
 
+/**
+ * Renders the OrderView component.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered OrderView component
+ */
 const OrderView = () => {
     const [orderCode, setOrderCode] = useState('');
     const [orderDetails, setOrderDetails] = useState(null);
     const [error, setError] = useState('');
     const { getIngredientNameById } = useOrder();
 
+    /**
+     * Handles the change of the order code input field.
+     * 
+     * @param {Event} e - The change event
+     */
     const handleInputChange = (e) => {
         setOrderCode(e.target.value);
     };
 
+    /**
+     * Fetches the order details from the backend.
+     */
     const fetchOrderDetails = async () => {
         try {
             const response = await fetch(`/api/v1/orders/${orderCode}`);
             if (!response.ok) {
-                throw new Error('Order not found');
+                setError('Failed to fetch order details. Please check the order code and try again.');
             }
             const data = await response.json();
             setOrderDetails(data);
@@ -27,6 +41,11 @@ const OrderView = () => {
         }
     };
 
+    /**
+     * Handles the form submission to fetch order details.
+     * 
+     * @param {Event} e - The submit event
+     */
     const handleSubmit = (e) => {
         e.preventDefault();
         fetchOrderDetails();
@@ -57,21 +76,24 @@ const OrderView = () => {
                         <Typography variant="h6">Order Details:</Typography>
                         <Typography>Order Code: {orderDetails.orderCode}</Typography>
                         <Typography>Total Price: ${orderDetails.orderTotal.toFixed(2)}</Typography>
-                        <Typography>Pizzas:</Typography>
-                        <ul>
+                        <Typography variant="h6">Pizzas:</Typography>
+                        <List>
                             {orderDetails.pizzas.map((pizza, index) => (
-                                <li key={pizza.id}>
-                                    <Typography>Pizza {index + 1} - ${pizza.price.toFixed(2)}</Typography>
-                                    <ul>
+                                <React.Fragment key={pizza.id}>
+                                    <ListItem>
+                                        <ListItemText primary={`Pizza ${index + 1} - $${pizza.price.toFixed(2)}`} />
+                                    </ListItem>
+                                    <List component="div" disablePadding>
                                         {pizza.ingredients.map((ingredient) => (
-                                            <li key={ingredient.id}>
-                                                {getIngredientNameById(ingredient.id)}: {ingredient.quantity} units
-                                            </li>
+                                            <ListItem key={ingredient.id} sx={{ pl: 4 }}>
+                                                <ListItemText primary={`${getIngredientNameById(ingredient.id)}: ${ingredient.quantity} units`} />
+                                            </ListItem>
                                         ))}
-                                    </ul>
-                                </li>
+                                    </List>
+                                    {index < orderDetails.pizzas.length - 1 && <Divider />}
+                                </React.Fragment>
                             ))}
-                        </ul>
+                        </List>
                     </CardContent>
                 </Card>
             )}

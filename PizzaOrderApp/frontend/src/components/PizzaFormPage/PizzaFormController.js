@@ -1,26 +1,31 @@
-import React, { useEffect } from 'react'
-
+import React, { useEffect } from 'react';
 import PizzaFormPage from './PizzaFormPage';
 import { useLocation, Navigate } from 'react-router-dom';
+import { useSnackbar } from '../../context/SnackbarContext';
+/**
+ * Renders the PizzaFormPage component if order details are present in the location state,
+ * otherwise navigates to the not found page.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered PizzaFormGateway component
+ */
 const PizzaFormGateway = () => {
+    const { enqueueSnackbar } = useSnackbar();
+    const location = useLocation();
 
-  
+    useEffect(() => {
+        if (!location.state?.orderDetails) {
+           enqueueSnackbar('Order details not found', 'error');
+        }
+    }, [location.state]);
 
-    
-const location = useLocation();
-
-
-     useEffect(() => {
-      console.log("in pizzaform controller");
-      console.log(location.state);
-      console.log(location.state?.orderDetails);
-    }
-    , [location.state]);
-//)
-  return (
-    
-    location.state?.orderDetails?<PizzaFormPage orderDetails={location.state.orderDetails} /> : <Navigate to="/notfound" />
-  )
+    return (
+        location.state?.orderDetails ? (
+            <PizzaFormPage orderDetails={location.state.orderDetails} />
+        ) : (
+            <Navigate to="/notfound" />
+        )
+    );
 }
 
-export default PizzaFormGateway
+export default PizzaFormGateway;

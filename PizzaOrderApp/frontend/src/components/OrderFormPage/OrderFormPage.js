@@ -1,31 +1,23 @@
-import { Box, Grid } from '@mui/material';
-import React, { useEffect } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Box, Grid, TextField, Button, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { TextField } from '@mui/material';
-import { Button } from '@mui/material';
-import { Card } from '@mui/material';
-import { CardContent } from '@mui/material';
-import { Typography } from '@mui/material';
-import { CircularProgress } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { useSnackbar } from '../../context/SnackbarContext';
 
+/**
+ * Renders the order form page.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered OrderFormPage component
+ */
 const OrderFormPage = () => {
-
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [formFields, setFormFields] = useState([]);
     const [formData, setFormData] = useState({});
     const [cookies] = useCookies(['firstName', 'lastName', 'address', 'phoneNumber']);
-    // A simple representation to mimic backend structure
-    const exampleFormField = {
-        fieldName: 'exampleName',
-        fieldType: 'text',
-        required: true
-    };
 
     useEffect(() => {
         fetch('/api/v1/form-structure')
@@ -34,18 +26,24 @@ const OrderFormPage = () => {
                 setFormFields(data);
                 let initialData = {};
                 data.forEach(field => {
-                 
                     const cookieValue = cookies[field.fieldName] ? decodeURIComponent(cookies[field.fieldName]).replace(/\+/g, ' ') : '';
                     initialData[field.fieldName] = cookieValue || initializeFieldValue(field.fieldType);
                 });
                 setFormData(initialData);
                 setLoading(false);
             })
-            .catch(error => {enqueueSnackbar('Failed to fetch form structure. Please try again later. error: '+error, 'error');})
-         
-    },[cookies,enqueueSnackbar] );
+            .catch(error => {
+                enqueueSnackbar('Failed to fetch form structure. Please try again later. Error: ' + error, 'error');
+            });
+    }, [cookies, enqueueSnackbar]);
 
-
+    /**
+     * Validates a form field.
+     * 
+     * @param {string} name - The name of the field to validate
+     * @param {string} value - The value of the field to validate
+     * @returns {string} An error message if validation fails, otherwise an empty string
+     */
     const validateField = (name, value) => {
         let error = '';
         switch (name) {
@@ -65,32 +63,32 @@ const OrderFormPage = () => {
                 break;
             default:
                 break;
-
         }
         return error;
     };
 
-
+    /**
+     * Initializes the value of a form field based on its type.
+     * 
+     * @param {string} fieldType - The type of the field
+     * @returns {string|number|boolean} The initialized field value
+     */
     function initializeFieldValue(fieldType) {
         switch (fieldType) {
             case 'number':
                 return 0;
             case 'text':
                 return '';
-            //  case 'date':
-            //     return '';  // Default date or an empty string if date picker handles it
-            // case 'checkbox':
-            //    return false;  // Typically used for boolean values
-            //case 'gender':
-            //   return '';  // Could be 'Male', 'Female', 'Other', or an empty string
             default:
                 return '';
         }
     }
 
-
-
-
+    /**
+     * Handles changes to form fields.
+     * 
+     * @param {Event} event - The change event
+     */
     const handleChange = (event) => {
         const { name, value, type } = event.target;
         const updatedValue = type === 'number' ? Number(value) : value;
@@ -106,10 +104,13 @@ const OrderFormPage = () => {
         }));
     };
 
-
+    /**
+     * Handles form submission.
+     * 
+     * @param {Event} event - The submit event
+     */
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Validate entire formData before submitting
         const newErrors = Object.keys(formData).reduce((acc, key) => {
             const error = validateField(key, formData[key]);
             if (error) acc[key] = error;
@@ -118,19 +119,19 @@ const OrderFormPage = () => {
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            return;  // Prevent submission if errors exist
+            return;
         }
 
         console.log(formData); // Proceed with form submission
-        // Send formData to backend
-        sendFormData()
-          
+        sendFormData();
     };
 
+    /**
+     * Sends form data to the backend.
+     */
     const sendFormData = async () => {
         setLoading(true);
         try {
-            console.log(formData);
             const response = await fetch('/api/v1/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -138,9 +139,7 @@ const OrderFormPage = () => {
             });
             const result = await response.json();
             if (response.ok) {
-                
                 navigate(`/order/${result.id}/pizza`, { state: { orderDetails: result } });
-               
             } else {
                 if (result.errors) {
                     setErrors(result.errors);
@@ -149,15 +148,15 @@ const OrderFormPage = () => {
                 }
             }
         } catch (error) {
-           
-            enqueueSnackbar('An error occurred. Please try again later. error:' + error, 'error');
+            enqueueSnackbar('An error occurred. Please try again later. Error: ' + error, 'error');
         }
         setLoading(false);
     };
-    
 
+    /**
+     * Handles form reset.
+     */
     const handleReset = () => {
-        // Reset form data and errors
         setFormData(Object.keys(formData).reduce((acc, key) => {
             acc[key] = initializeFieldValue(formFields.find(field => field.fieldName === key).fieldType);
             return acc;
@@ -168,8 +167,8 @@ const OrderFormPage = () => {
     return (
         <Box>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignitems="center" minHeight="100vh">
-                    <CircularProgress />  
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                    <CircularProgress />
                 </Box>
             ) : (
                 <Box>
@@ -177,7 +176,6 @@ const OrderFormPage = () => {
                         <CardContent>
                             <Typography variant="h4" align="center">Order Form</Typography>
                             <Typography variant="body1" align="center">Please fill out the form below to place your order.</Typography>
-                          
                         </CardContent>
                     </Card>
                     <Card sx={{ m: 2 }}>
@@ -201,10 +199,9 @@ const OrderFormPage = () => {
                                             />
                                         ))}
                                         <Grid item xs={12} display="flex" justifyContent="center">
-                                            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, m:2 }}>Submit</Button>
-                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m:2 }}>Reset</Button>
+                                            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Submit</Button>
+                                            <Button type="reset" onClick={handleReset} variant="contained" sx={{ mt: 3, mb: 2, m: 2 }}>Reset</Button>
                                         </Grid>
-                                       
                                     </form>
                                 </Grid>
                             </Grid>
@@ -216,4 +213,4 @@ const OrderFormPage = () => {
     )
 }
 
-export default OrderFormPage
+export default OrderFormPage;

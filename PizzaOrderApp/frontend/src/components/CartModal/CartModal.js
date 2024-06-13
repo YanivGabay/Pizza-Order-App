@@ -20,6 +20,12 @@ const style = {
     p: 4,
 };
 
+/**
+ * Renders the cart modal to display the items in the cart.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered CartModal component
+ */
 const CartModal = () => {
     const { cart, getIngredientNameById } = useOrder();
     const { isCartModalOpen, toggleCartModal } = useCart();
