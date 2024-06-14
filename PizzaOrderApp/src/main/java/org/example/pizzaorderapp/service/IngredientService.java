@@ -21,7 +21,7 @@ public class IngredientService {
     public IngredientService() {
         ingredients.add(new Ingredient(1L, "Tomato", "/tomato.jpg", PricingConfig.getTomato()));
         ingredients.add(new Ingredient(2L, "Cheese", "/cheese.jpg", PricingConfig.getCheese()));
-        ingredients.add(new Ingredient(3L, "Pepperoni", "/pepperoni.jpg", PricingConfig.getPeperoni()));
+        ingredients.add(new Ingredient(3L, "Pepperoni", "/peperoni.jpg", PricingConfig.getPeperoni()));
         ingredients.add(new Ingredient(4L, "Sauce", "/sauce.jpg", PricingConfig.getSauce()));
         ingredients.add(new Ingredient(5L, "Ricotta", "/ricotta.jpg", PricingConfig.getRicotta()));
         ingredients.add(new Ingredient(6L, "Olives", "/olives.jpg", PricingConfig.getOlives()));
