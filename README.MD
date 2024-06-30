@@ -2,13 +2,16 @@
 # Pizza Order App
 
 ## Author
+
 Yaniv Gabay  
-ID: 205745615
+
 
 ## Overview
+
 The Pizza Order App is a web application designed to manage pizza orders, including customer information, ingredient selection, and pricing. The backend is built with Spring Boot and includes various services, controllers, and configurations to support the application's functionality.
 
 ## Table of Contents
+
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -18,6 +21,7 @@ The Pizza Order App is a web application designed to manage pizza orders, includ
 - [Frontend](#frontend) *(to be added)*
 
 ## Project Structure
+
 ```
 src/main/java/org/example/pizzaorderapp
 |-- config
